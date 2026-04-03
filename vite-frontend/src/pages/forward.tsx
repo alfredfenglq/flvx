@@ -987,9 +987,11 @@ const SortableCompactTableRow = ({
           <span className="font-medium text-default-700 text-sm">
             {forward.tunnelName}
           </span>
-          <span className="text-success font-bold text-[12px] mr-1.5">
-            ‾{formatTunnelTrafficRatio(forward.tunnelTrafficRatio)}
-          </span>
+          {forward.tunnelTrafficRatio !== undefined && normalizeTunnelTrafficRatio(forward.tunnelTrafficRatio) !== 1 && (
+            <span className="text-success font-bold text-[12px] ml-1.5 border border-success/30 rounded px-1 bg-success/10">
+              {formatTunnelTrafficRatio(forward.tunnelTrafficRatio)}
+            </span>
+          )}
         </div>
       </TableCell>
       <TableCell
