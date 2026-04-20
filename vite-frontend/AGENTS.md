@@ -1,70 +1,40 @@
-# VITE FRONTEND KNOWLEDGE BASE
+# vite-frontend
 
-**Generated:** Fri Mar 20 2026
-**Commit:** f45f960
-**Branch:** main
-**Tag:** 2.1.9-beta6
+React dashboard for FLVX. rolldown-vite + TypeScript + Tailwind v4 + shadcn/radix.
 
-## OVERVIEW
-Web management console for FLVX.
-**Stack:** React 18, rolldown-vite, TypeScript, Tailwind CSS v4, shadcn/radix primitives with HeroUI-compatible bridge.
+## Structure
 
-## STRUCTURE
-```
-vite-frontend/
-├── src/
-│   ├── api/                      # Axios wrapper + typed endpoint helpers
-│   ├── components/ui/            # shadcn/radix primitive components
-│   ├── shadcn-bridge/heroui/     # HeroUI-compatible facade (23 components)
-│   ├── pages/                    # Route views + page modules (forward/node/tunnel)
-│   ├── hooks/                    # H5/WebView/mobile hooks
-│   ├── styles/
-│   │   ├── globals.css           # Base styles + imports tailwind-theme.pcss
-│   │   └── tailwind-theme.pcss   # Tailwind v4 @theme inline semantic token mapping
-│   ├── App.tsx                   # Routes + ProtectedRoute + H5 layout selection
-│   ├── main.tsx                  # ReactDOM + BrowserRouter + Provider
-│   └── provider.tsx              # Toast/theme/provider composition
-├── components.json               # shadcn/ui config
-├── tailwind.config.js            # Compatibility config for migration scaffolding
-├── vite.config.ts                # base '/', host 0.0.0.0:3000; minify/treeshake disabled
-└── package.json
-```
+| Dir/File | Role |
+|----------|------|
+| `src/App.tsx` | Routes + ProtectedRoute + H5 layout selection |
+| `src/main.tsx` | Entry: ReactDOM + BrowserRouter |
+| `src/api/` | Axios wrapper, sends raw JWT in `Authorization` |
+| `src/pages/` | Route views (forward, node, tunnel, settings, ...) |
+| `src/shadcn-bridge/heroui/` | HeroUI-compatible facade — **import from here only** |
+| `src/components/ui/` | shadcn/radix primitives |
+| `src/styles/globals.css` | Base styles — **must import `tailwind-theme.pcss`** |
+| `src/styles/tailwind-theme.pcss` | Tailwind v4 `@theme inline` semantic tokens |
+| `vite.config.ts` | host `0.0.0.0:3000`, `minify: false`, `treeshake: false` |
 
-## WHERE TO LOOK
-| Task | Location | Notes |
-|------|----------|-------|
-| **Route definitions** | `src/App.tsx` | React Router v6 + ProtectedRoute |
-| **API Client/Auth header** | `src/api/network.ts` | Sends raw JWT in `Authorization` header |
-| **Login Flow** | `src/pages/index.tsx` | Calls `login()`, stores `localStorage.token` |
-| **Auth helpers** | `src/utils/auth.ts`, `src/utils/jwt.ts` | Role checks + token expiration parsing |
-| **UI bridge usage** | `src/shadcn-bridge/heroui/` | Import from bridge, not `@heroui/*` |
-| **Button parity mapping** | `src/shadcn-bridge/heroui/button.tsx` | Legacy `color`/`variant` mapped to shadcn classes |
-| **Semantic theme tokens** | `src/styles/tailwind-theme.pcss` | Restores classes like `bg-primary`, `border-input` |
-| **Theme wiring** | `src/styles/globals.css` | Must import `./tailwind-theme.pcss` |
+## Conventions
 
-## CONVENTIONS
-- **Auth Header**: Use raw JWT token (no `Bearer` prefix).
-- **API Envelope**: Responses follow `{code, msg, data, ts}`.
-- **UI Imports**: Use `src/shadcn-bridge/heroui/*` in app pages/layouts for compatibility.
-- **Semantic Colors**: Keep `globals.css -> tailwind-theme.pcss` import intact or semantic classes break.
-- **Build profile**: `minify: false`, `treeshake: false` for debugging.
-- **Layout mode**: H5/mobile mode controlled by existing route/query and hook logic.
+- **Auth**: raw JWT in `Authorization` header — no `Bearer` prefix.
+- **API envelope**: `{code, msg, data, ts}`, code 0 = success.
+- **UI imports**: `src/shadcn-bridge/heroui/*` only, never `@heroui/*` or `@nextui-org/*`.
+- **Theme**: don't remove `tailwind-theme.pcss` import from `globals.css` — breaks semantic classes (`bg-primary`, `text-foreground`, `border-input`).
 
-## ANTI-PATTERNS
-- **DO NOT ADD** `Bearer` to auth header in frontend requests.
-- **DO NOT REINTRODUCE** `@heroui/*` or `@nextui-org/*` dependencies.
-- **DO NOT REMOVE** `src/styles/tailwind-theme.pcss` import from `src/styles/globals.css`.
-- **DO NOT ADD** frontend tests; no Vitest/Jest setup exists.
+## Anti-patterns
 
-## NOTES
-- Uses `rolldown-vite` (experimental Rust bundler) instead of standard Vite.
-- Build outputs are non-minified (debugging mode).
-- No test infrastructure exists (Vitest/Jest not configured).
+- Don't add `Bearer` prefix to auth header.
+- Don't reintroduce `@heroui/*` or `@nextui-org/*` packages.
+- Don't add frontend tests (no test infrastructure).
+- Don't remove `tailwind-theme.pcss` import.
 
-## COMMANDS
+## Commands
+
 ```bash
-cd vite-frontend
-npm run dev
-npm run build
-npm run lint
+npm install --legacy-peer-deps
+npm run dev           # http://0.0.0.0:3000
+npm run build         # tsc && vite build
+npm run lint          # eslint --fix
 ```
