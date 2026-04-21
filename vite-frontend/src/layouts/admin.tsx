@@ -380,7 +380,7 @@ export default function AdminLayout({
         ${isMobile ? "fixed h-screen top-0 left-0 rounded-r-3xl" : "relative h-full rounded-3xl"}
         ${isMobile && !mobileMenuVisible ? "-translate-x-full" : "translate-x-0"}
         ${isMobile ? "w-64" : isCollapsed ? "w-20" : "w-[260px]"}
-        bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl
+        bg-white/70 dark:bg-zinc-900/70 backdrop-blur-3xl
         shadow-[0_10px_30px_rgba(0,0,0,0.1)]
         border border-white/80 dark:border-white/10
         z-50
