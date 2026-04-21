@@ -85,6 +85,12 @@ func (d *kcpDialer) parseMetadata(md mdata.Metadata) (err error) {
 		if md.IsExists("kcp.nocomp") {
 			d.md.config.NoComp = mdutil.GetBool(md, "kcp.nocomp")
 		}
+		if md.IsExists("kcp.datashard") {
+			d.md.config.DataShard = mdutil.GetInt(md, "kcp.datashard")
+		}
+		if md.IsExists("kcp.parityshard") {
+			d.md.config.ParityShard = mdutil.GetInt(md, "kcp.parityshard")
+		}
 	}
 
 	d.md.handshakeTimeout = mdutil.GetDuration(md, handshakeTimeout)

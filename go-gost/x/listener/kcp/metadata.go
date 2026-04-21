@@ -88,6 +88,12 @@ func (l *kcpListener) parseMetadata(md mdata.Metadata) (err error) {
 		if md.IsExists("kcp.nocomp") {
 			l.md.config.NoComp = mdutil.GetBool(md, "kcp.nocomp")
 		}
+		if md.IsExists("kcp.datashard") {
+			l.md.config.DataShard = mdutil.GetInt(md, "kcp.datashard")
+		}
+		if md.IsExists("kcp.parityshard") {
+			l.md.config.ParityShard = mdutil.GetInt(md, "kcp.parityshard")
+		}
 	}
 
 	l.md.backlog = mdutil.GetInt(md, backlog)

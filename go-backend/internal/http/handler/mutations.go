@@ -3457,9 +3457,15 @@ func buildTunnelChainConfig(tunnelID int64, fromNodeID int64, targets []tunnelRu
 			connectorMetadata["nodelay"] = true
 			connectorMetadata["mux.keepaliveInterval"] = "15s"
 			connectorMetadata["mux.keepaliveTimeout"] = "45s"
+			connectorMetadata["mux.maxFrameSize"] = 32768
+			connectorMetadata["mux.maxStreamBuffer"] = 2097152
 		}
 		if isKCPTunnelProtocol(protocol) {
 			connectorMetadata["connectTimeout"] = "30s"
+			connectorMetadata["mux.keepaliveInterval"] = "15s"
+			connectorMetadata["mux.keepaliveTimeout"] = "45s"
+			connectorMetadata["mux.maxFrameSize"] = 32768
+			connectorMetadata["mux.maxStreamBuffer"] = 2097152
 		}
 		if len(connectorMetadata) > 0 {
 			connector["metadata"] = connectorMetadata
@@ -3505,9 +3511,15 @@ func buildTunnelChainServiceConfig(tunnelID int64, chainNode tunnelRuntimeNode, 
 		handlerMetadata["nodelay"] = true
 		handlerMetadata["mux.keepaliveInterval"] = "15s"
 		handlerMetadata["mux.keepaliveTimeout"] = "45s"
+		handlerMetadata["mux.maxFrameSize"] = 32768
+		handlerMetadata["mux.maxStreamBuffer"] = 2097152
 	}
 	if isKCPTunnelProtocol(protocol) {
 		handlerMetadata["connectTimeout"] = "30s"
+		handlerMetadata["mux.keepaliveInterval"] = "15s"
+		handlerMetadata["mux.keepaliveTimeout"] = "45s"
+		handlerMetadata["mux.maxFrameSize"] = 32768
+		handlerMetadata["mux.maxStreamBuffer"] = 2097152
 	}
 	if len(handlerMetadata) > 0 {
 		handlerCfg["metadata"] = handlerMetadata
@@ -3621,8 +3633,15 @@ func buildTunnelDialerConfig(protocol string) map[string]interface{} {
 	}
 	if isKCPTunnelProtocol(protocol) {
 		dialer["metadata"] = map[string]interface{}{
-			"kcp.keepalive": 10,
-			"kcp.tcp":       false,
+			"kcp.keepalive":   10,
+			"kcp.tcp":         false,
+			"kcp.mode":        "fast3",
+			"kcp.sndwnd":      2048,
+			"kcp.rcvwnd":      2048,
+			"kcp.mtu":         1400,
+			"kcp.datashard":   0,
+			"kcp.parityshard": 0,
+			"kcp.nocomp":      true,
 		}
 	}
 	return dialer
@@ -3634,8 +3653,15 @@ func buildTunnelListenerConfig(protocol string) map[string]interface{} {
 	}
 	if isKCPTunnelProtocol(protocol) {
 		listener["metadata"] = map[string]interface{}{
-			"kcp.keepalive": 10,
-			"kcp.tcp":       false,
+			"kcp.keepalive":   10,
+			"kcp.tcp":         false,
+			"kcp.mode":        "fast3",
+			"kcp.sndwnd":      2048,
+			"kcp.rcvwnd":      2048,
+			"kcp.mtu":         1400,
+			"kcp.datashard":   0,
+			"kcp.parityshard": 0,
+			"kcp.nocomp":      true,
 		}
 	}
 	return listener
