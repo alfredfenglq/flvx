@@ -174,7 +174,7 @@ export default function IndexPage() {
                 <Input
                   classNames={{
                     inputWrapper:
-                      "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/60 dark:border-white/10 h-12 shadow-sm rounded-xl",
+                      "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/30 dark:border-white/10 h-12 shadow-sm rounded-xl",
                     input: "text-base font-medium",
                   }}
                   errorMessage={errors.username}
@@ -193,7 +193,7 @@ export default function IndexPage() {
                 <Input
                   classNames={{
                     inputWrapper:
-                      "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/60 dark:border-white/10 h-12 shadow-sm rounded-xl",
+                      "bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/30 dark:border-white/10 h-12 shadow-sm rounded-xl",
                     input: "text-base font-medium tracking-wider",
                   }}
                   isDisabled={loading}
