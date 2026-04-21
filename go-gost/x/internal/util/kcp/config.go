@@ -89,6 +89,15 @@ func ParseFromFile(filename string) (*Config, error) {
 	return config, nil
 }
 
+// Clone returns a deep copy of the Config.
+func (c *Config) Clone() *Config {
+	if c == nil {
+		return nil
+	}
+	clone := *c
+	return &clone
+}
+
 // Init initializes the KCP config.
 func (c *Config) Init() {
 	switch c.Mode {
