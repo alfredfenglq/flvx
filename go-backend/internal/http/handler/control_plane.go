@@ -474,6 +474,9 @@ func (h *Handler) controlForwardServices(forward *forwardRecord, commandType str
 
 		nodeHandled, lastNotFoundErr, err := h.controlForwardServicesOnNode(fp.NodeID, bases, commandType)
 		if err != nil {
+			if isNodeOfflineOrTimeoutError(err) {
+				continue
+			}
 			return err
 		}
 

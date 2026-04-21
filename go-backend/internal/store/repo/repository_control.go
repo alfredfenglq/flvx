@@ -99,6 +99,22 @@ func (r *Repository) ListActiveForwardIDsByNode(nodeID int64) ([]int64, error) {
 	return ids, nil
 }
 
+func (r *Repository) ListForwardIDsByNode(nodeID int64) ([]int64, error) {
+	if r == nil || r.db == nil {
+		return nil, errors.New("repository not initialized")
+	}
+	var ids []int64
+	err := r.db.Model(&model.ForwardPort{}).
+		Where("forward_port.node_id = ?", nodeID).
+		Select("DISTINCT forward_port.forward_id").
+		Order("forward_port.forward_id ASC").
+		Pluck("forward_port.forward_id", &ids).Error
+	if err != nil {
+		return nil, err
+	}
+	return ids, nil
+}
+
 func (r *Repository) ListForwardPorts(forwardID int64) ([]model.ForwardPortRecord, error) {
 	if r == nil || r.db == nil {
 		return nil, errors.New("repository not initialized")

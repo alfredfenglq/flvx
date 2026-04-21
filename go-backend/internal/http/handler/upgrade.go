@@ -389,9 +389,7 @@ func (h *Handler) consumeNodePendingUpgradeRedeploy(nodeID int64) bool {
 }
 
 func (h *Handler) onNodeOnline(nodeID int64) {
-	if !h.consumeNodePendingUpgradeRedeploy(nodeID) {
-		return
-	}
+	h.consumeNodePendingUpgradeRedeploy(nodeID)
 	h.redeployNodeRuntimeAfterUpgrade(nodeID)
 }
 
@@ -401,7 +399,7 @@ func (h *Handler) redeployNodeRuntimeAfterUpgrade(nodeID int64) {
 		fmt.Printf("post-upgrade redeploy: list tunnels for node %d failed: %v\n", nodeID, err)
 		return
 	}
-	forwardIDs, err := h.repo.ListActiveForwardIDsByNode(nodeID)
+	forwardIDs, err := h.repo.ListForwardIDsByNode(nodeID)
 	if err != nil {
 		fmt.Printf("post-upgrade redeploy: list forwards for node %d failed: %v\n", nodeID, err)
 		return
