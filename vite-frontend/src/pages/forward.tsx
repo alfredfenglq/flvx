@@ -4189,7 +4189,8 @@ export default function ForwardPage() {
                     <Table
                       aria-label="全部规则列表"
                       classNames={{
-                        wrapper: "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-[24px]",
+                        wrapper:
+                          "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-[24px]",
                         th: "bg-default-100/50 text-default-600 font-semibold text-sm border-b border-divider py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                         td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                         tr: "hover:bg-white/10 dark:hover:bg-white/5 transition-colors group",
@@ -4439,7 +4440,8 @@ export default function ForwardPage() {
                                     aria-label={`${group.userName}-${tunnel.tunnelName}规则列表`}
                                     className={`table-fixed ${FORWARD_GROUPED_TABLE_MIN_WIDTH_CLASS}`}
                                     classNames={{
-                                      wrapper: "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
+                                      wrapper:
+                                        "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
                                       th: "bg-transparent text-default-600 font-semibold text-sm border-b border-white/20 dark:border-white/10 py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                                       td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                                       tr: "hover:bg-white/40 dark:hover:bg-white/10 transition-colors",
@@ -5447,7 +5449,7 @@ export default function ForwardPage() {
 
                     {/* 统计摘要 */}
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="text-center p-3 bg-default-100 dark:bg-gray-800 rounded-lg border border-divider">
+                      <div className="text-center p-3 bg-default-100 rounded-lg border border-divider">
                         <div className="text-2xl font-bold text-foreground">
                           {diagnosisProgress.total > 0
                             ? diagnosisProgress.total
@@ -5519,7 +5521,7 @@ export default function ForwardPage() {
                           return (
                             <div
                               key={title}
-                              className="border border-divider rounded-lg overflow-hidden bg-white dark:bg-gray-800"
+                              className="border border-divider rounded-lg overflow-hidden"
                             >
                               <div className="bg-primary/10 dark:bg-primary/20 px-3 py-2 border-b border-divider">
                                 <h3 className="text-sm font-semibold text-primary">
@@ -5527,7 +5529,7 @@ export default function ForwardPage() {
                                 </h3>
                               </div>
                               <table className="w-full text-sm">
-                                <thead className="bg-default-100 dark:bg-gray-700">
+                                <thead className="bg-default-100">
                                   <tr>
                                     <th className="px-3 py-2 text-left font-semibold text-xs">
                                       路径
@@ -5546,7 +5548,7 @@ export default function ForwardPage() {
                                     </th>
                                   </tr>
                                 </thead>
-                                <tbody className="divide-y divide-divider bg-white dark:bg-gray-800">
+                                <tbody className="divide-y divide-divider bg-content1">
                                   {results.map((result, index) => {
                                     const isDiagnosing = Boolean(
                                       result.diagnosing,
@@ -5565,7 +5567,7 @@ export default function ForwardPage() {
                                           isDiagnosing
                                             ? "bg-warning-50 dark:bg-warning-900/20"
                                             : isSuccess
-                                              ? "bg-white dark:bg-gray-800"
+                                              ? "bg-content1"
                                               : "bg-danger-50 dark:bg-danger-900/30"
                                         }`}
                                       >
@@ -5752,7 +5754,7 @@ export default function ForwardPage() {
                                       isDiagnosing
                                         ? "border-warning-200 dark:border-warning-300/30 bg-warning-50 dark:bg-warning-900/20"
                                         : isSuccess
-                                          ? "border-divider bg-white dark:bg-gray-800"
+                                          ? "border-divider bg-content1"
                                           : "border-danger-200 dark:border-danger-300/30 bg-danger-50 dark:bg-danger-900/30"
                                     }`}
                                   >
@@ -5940,7 +5942,7 @@ export default function ForwardPage() {
                   </div>
                 )}
               </ModalBody>
-              <ModalFooter className="bg-transparent border-t border-white/20 dark:border-white/10">
+              <ModalFooter className="bg-transparent border-t border-divider">
                 <Button variant="light" onPress={onClose}>
                   关闭
                 </Button>
