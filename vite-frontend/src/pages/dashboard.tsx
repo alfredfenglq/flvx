@@ -655,7 +655,7 @@ export default function DashboardPage() {
             Good morning, {username}
           </h1>
           <p className="text-sm text-default-500 mt-1">
-            Here's what's happening with your network today.
+            Here&apos;s what&apos;s happening with your network today.
           </p>
         </div>
         <div className="flex items-center gap-3">

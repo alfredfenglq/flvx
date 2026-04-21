@@ -492,7 +492,7 @@ export default function GroupPage() {
                 aria-label="隧道分组列表"
                 classNames={{
                   wrapper:
-                    "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
+                    "bg-transparent p-0 shadow-none border-none overflow-auto rounded-2xl",
                   th: "bg-transparent text-default-600 font-semibold text-sm border-b border-white/20 dark:border-white/10 py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                   td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                   tr: "hover:bg-white/40 dark:hover:bg-white/10 transition-colors",
@@ -573,7 +573,7 @@ export default function GroupPage() {
                 aria-label="用户分组列表"
                 classNames={{
                   wrapper:
-                    "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
+                    "bg-transparent p-0 shadow-none border-none overflow-auto rounded-2xl",
                   th: "bg-transparent text-default-600 font-semibold text-sm border-b border-white/20 dark:border-white/10 py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                   td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                   tr: "hover:bg-white/40 dark:hover:bg-white/10 transition-colors",
@@ -686,7 +686,7 @@ export default function GroupPage() {
                 aria-label="分组权限列表"
                 classNames={{
                   wrapper:
-                    "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
+                    "bg-transparent p-0 shadow-none border-none overflow-auto rounded-2xl",
                   th: "bg-transparent text-default-600 font-semibold text-sm border-b border-white/20 dark:border-white/10 py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                   td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                   tr: "hover:bg-white/40 dark:hover:bg-white/10 transition-colors",

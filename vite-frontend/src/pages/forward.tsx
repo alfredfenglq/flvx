@@ -4176,7 +4176,7 @@ export default function ForwardPage() {
                   {sortedForwards.length} 条规则
                 </span>
               </div>
-              <Card className="overflow-hidden rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]">
+              <Card className="rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]">
                 <DndContext
                   collisionDetection={pointerWithin}
                   sensors={sensors}
@@ -4188,9 +4188,10 @@ export default function ForwardPage() {
                   >
                     <Table
                       aria-label="全部规则列表"
+                      className="table-fixed min-w-[1160px]"
                       classNames={{
                         wrapper:
-                          "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-[24px]",
+                          "bg-transparent p-0 shadow-none border-none overflow-auto rounded-[24px]",
                         th: "bg-default-100/50 text-default-600 font-semibold text-sm border-b border-divider py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                         td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                         tr: "hover:bg-white/10 dark:hover:bg-white/5 transition-colors group",
@@ -4328,7 +4329,7 @@ export default function ForwardPage() {
               return (
                 <div
                   key={`grouped-table-${group.userId}-${group.userName}`}
-                  className="overflow-hidden rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]"
+                  className="rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]"
                 >
                   <div className="flex items-center justify-between border-b border-white/20 dark:border-white/10 bg-white/20 dark:bg-black/20 backdrop-blur-3xl px-5 py-4">
                     <div className="flex items-center gap-2">
@@ -4419,7 +4420,7 @@ export default function ForwardPage() {
                               headerClassName="flex items-center justify-between border-b border-white/20 dark:border-white/10 bg-white/20 dark:bg-black/20 backdrop-blur-3xl px-4 py-2.5"
                               titleClassName="truncate text-sm font-semibold text-default-700"
                               tunnel={tunnel}
-                              wrapperClassName="overflow-hidden rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]"
+                              wrapperClassName="rounded-2xl border border-white/80 dark:border-white/10 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-3xl shadow-[0_15px_35px_rgba(0,0,0,0.1)]"
                               onToggleCollapsed={() =>
                                 toggleTunnelGroupCollapsed(
                                   group.userId,
@@ -4441,7 +4442,7 @@ export default function ForwardPage() {
                                     className={`table-fixed ${FORWARD_GROUPED_TABLE_MIN_WIDTH_CLASS}`}
                                     classNames={{
                                       wrapper:
-                                        "bg-transparent p-0 shadow-none border-none overflow-hidden rounded-2xl",
+                                        "bg-transparent p-0 shadow-none border-none overflow-auto rounded-2xl",
                                       th: "bg-transparent text-default-600 font-semibold text-sm border-b border-white/20 dark:border-white/10 py-3 uppercase tracking-wider first:rounded-tl-[24px] last:rounded-tr-[24px]",
                                       td: "py-3 border-b border-divider/50 group-data-[last=true]:border-b-0",
                                       tr: "hover:bg-white/40 dark:hover:bg-white/10 transition-colors",
