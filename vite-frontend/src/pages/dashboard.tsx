@@ -1205,7 +1205,7 @@ export default function DashboardPage() {
               </Button>
             </div>
 
-            <div className="space-y-2 max-h-60 overflow-y-auto">
+            <div className="space-y-2 max-h-60 overflow-y-auto scrollbar-hide">
               {addressList.map((item) => (
                 <div
                   key={item.id}

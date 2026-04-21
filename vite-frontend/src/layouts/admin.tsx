@@ -402,7 +402,7 @@ export default function AdminLayout({
         </div>
 
         {/* 菜单导航 */}
-        <nav className="flex-1 px-4 overflow-y-auto overflow-x-hidden [scrollbar-width:none]">
+        <nav className="flex-1 px-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
           <ul className="space-y-2">
             {filteredMenuItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -555,7 +555,7 @@ export default function AdminLayout({
         )}
 
         {/* 主内容 */}
-        <main className="flex-1 overflow-y-auto [scrollbar-width:none]">
+        <main className="flex-1 overflow-y-auto scrollbar-hide">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

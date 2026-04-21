@@ -4979,7 +4979,7 @@ export default function ForwardPage() {
               </Button>
             </div>
 
-            <div className="space-y-2 max-h-60 overflow-y-auto">
+            <div className="space-y-2 max-h-60 overflow-y-auto scrollbar-hide">
               {addressList.map((item) => (
                 <div
                   key={item.id}
@@ -5284,7 +5284,7 @@ export default function ForwardPage() {
                   </div>
 
                   <div
-                    className="max-h-40 overflow-y-auto space-y-1"
+                    className="max-h-40 overflow-y-auto space-y-1 scrollbar-hide"
                     style={{
                       scrollbarWidth: "thin",
                       scrollbarColor: "rgb(156 163 175) transparent",

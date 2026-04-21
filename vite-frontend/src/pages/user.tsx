@@ -1767,7 +1767,7 @@ export default function UserPage() {
                     流量限制、规则数量、到期时间、流量重置时间将自动继承用户设置
                   </div>
 
-                  <div className="grid gap-2 max-h-72 overflow-y-auto pr-1">
+                  <div className="grid gap-2 max-h-72 overflow-y-auto pr-1 scrollbar-hide">
                     {tunnels.map((tunnel) => {
                       const isAssigned = isTunnelAssigned(tunnel.id);
                       const isSelected = batchTunnelSelections.has(tunnel.id);
