@@ -42,6 +42,7 @@ type diagnosisWorkItem struct {
 	toNode       chainNodeRecord
 	hasChainHop  bool
 	ipPreference string
+	protocol     string
 }
 
 type diagnosisExecOptions struct {
@@ -692,6 +693,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 	}
 
 	ipPreference := h.repo.GetTunnelIPPreference(forward.TunnelID)
+	protocol := strings.ToLower(strings.TrimSpace(tunnel.Protocol))
 
 	inNodes, chainHops, outNodes := splitChainNodeGroups(chainRows)
 	workItems := make([]diagnosisWorkItem, 0, len(chainRows)*2+len(targets))
@@ -706,6 +708,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 					targetIP:    target.IP,
 					targetPort:  target.Port,
 					description: description,
+					protocol:    protocol,
 					metadata: map[string]interface{}{
 						"fromChainType": 1,
 					},
@@ -723,6 +726,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 						hasChainHop:  true,
 						ipPreference: ipPreference,
 						description:  description,
+						protocol:     protocol,
 						metadata: map[string]interface{}{
 							"fromChainType": 1,
 							"toChainType":   2,
@@ -739,6 +743,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 						hasChainHop:  true,
 						ipPreference: ipPreference,
 						description:  description,
+						protocol:     protocol,
 						metadata: map[string]interface{}{
 							"fromChainType": 1,
 							"toChainType":   3,
@@ -759,6 +764,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 							hasChainHop:  true,
 							ipPreference: ipPreference,
 							description:  description,
+							protocol:     protocol,
 							metadata: map[string]interface{}{
 								"fromChainType": 2,
 								"fromInx":       currentNode.Inx,
@@ -776,6 +782,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 							hasChainHop:  true,
 							ipPreference: ipPreference,
 							description:  description,
+							protocol:     protocol,
 							metadata: map[string]interface{}{
 								"fromChainType": 2,
 								"fromInx":       currentNode.Inx,
@@ -795,6 +802,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 					targetIP:    target.IP,
 					targetPort:  target.Port,
 					description: description,
+					protocol:    protocol,
 					metadata: map[string]interface{}{
 						"fromChainType": 3,
 					},
@@ -810,6 +818,7 @@ func (h *Handler) prepareForwardDiagnosis(forward *forwardRecord) (string, []dia
 					targetIP:    target.IP,
 					targetPort:  target.Port,
 					description: description,
+					protocol:    protocol,
 					metadata: map[string]interface{}{
 						"fromChainType": 1,
 					},
@@ -864,6 +873,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 	}
 
 	ipPreference := h.repo.GetTunnelIPPreference(tunnelID)
+	protocol := strings.ToLower(strings.TrimSpace(tunnel.Protocol))
 	inNodes, chainHops, outNodes := splitChainNodeGroups(chainRows)
 	workItems := make([]diagnosisWorkItem, 0, len(chainRows)*2)
 
@@ -876,6 +886,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 				targetIP:    "www.bing.com",
 				targetPort:  443,
 				description: description,
+				protocol:    protocol,
 				metadata: map[string]interface{}{
 					"fromChainType": 1,
 				},
@@ -892,6 +903,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 						hasChainHop:  true,
 						ipPreference: ipPreference,
 						description:  description,
+						protocol:     protocol,
 						metadata: map[string]interface{}{
 							"fromChainType": 1,
 							"toChainType":   2,
@@ -908,6 +920,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 						hasChainHop:  true,
 						ipPreference: ipPreference,
 						description:  description,
+						protocol:     protocol,
 						metadata: map[string]interface{}{
 							"fromChainType": 1,
 							"toChainType":   3,
@@ -928,6 +941,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 							hasChainHop:  true,
 							ipPreference: ipPreference,
 							description:  description,
+							protocol:     protocol,
 							metadata: map[string]interface{}{
 								"fromChainType": 2,
 								"fromInx":       currentNode.Inx,
@@ -945,6 +959,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 							hasChainHop:  true,
 							ipPreference: ipPreference,
 							description:  description,
+							protocol:     protocol,
 							metadata: map[string]interface{}{
 								"fromChainType": 2,
 								"fromInx":       currentNode.Inx,
@@ -963,6 +978,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 				targetIP:    "www.bing.com",
 				targetPort:  443,
 				description: description,
+				protocol:    protocol,
 				metadata: map[string]interface{}{
 					"fromChainType": 3,
 				},
@@ -976,6 +992,7 @@ func (h *Handler) prepareTunnelDiagnosis(tunnelID int64) (string, string, []diag
 				targetIP:    "www.bing.com",
 				targetPort:  443,
 				description: description,
+				protocol:    protocol,
 				metadata: map[string]interface{}{
 					"fromChainType": 1,
 				},
@@ -1095,9 +1112,9 @@ func (h *Handler) executeDiagnosisWorkItem(workItem diagnosisWorkItem, options d
 	single := make([]map[string]interface{}, 0, 1)
 	nodeCache := map[int64]*nodeRecord{}
 	if workItem.hasChainHop {
-		h.appendChainHopDiagnosis(&single, nodeCache, workItem.fromNodeID, workItem.toNode, workItem.description, workItem.metadata, workItem.ipPreference, options)
+		h.appendChainHopDiagnosis(&single, nodeCache, workItem.fromNodeID, workItem.toNode, workItem.description, workItem.metadata, workItem.ipPreference, workItem.protocol, options)
 	} else {
-		h.appendPathDiagnosis(&single, nodeCache, workItem.fromNodeID, workItem.targetIP, workItem.targetPort, workItem.description, workItem.metadata, options)
+		h.appendPathDiagnosis(&single, nodeCache, workItem.fromNodeID, workItem.targetIP, workItem.targetPort, workItem.description, workItem.metadata, workItem.protocol, options)
 	}
 
 	if len(single) == 0 {
@@ -1223,14 +1240,14 @@ func (h *Handler) appendFailedDiagnosis(results *[]map[string]interface{}, nodeC
 		item["nodeName"] = node.Name
 	}
 	if strings.TrimSpace(message) == "" {
-		message = "TCP连接失败"
+		message = "连接失败"
 	}
 	item["success"] = false
 	item["message"] = message
 	*results = append(*results, item)
 }
 
-func (h *Handler) appendPathDiagnosis(results *[]map[string]interface{}, nodeCache map[int64]*nodeRecord, fromNodeID int64, targetIP string, targetPort int, description string, metadata map[string]interface{}, options diagnosisExecOptions) {
+func (h *Handler) appendPathDiagnosis(results *[]map[string]interface{}, nodeCache map[int64]*nodeRecord, fromNodeID int64, targetIP string, targetPort int, description string, metadata map[string]interface{}, protocol string, options diagnosisExecOptions) {
 	item := newDiagnosisResultItem(fromNodeID, targetIP, targetPort, description, metadata)
 
 	fromNode, err := h.cachedNode(nodeCache, fromNodeID)
@@ -1247,9 +1264,9 @@ func (h *Handler) appendPathDiagnosis(results *[]map[string]interface{}, nodeCac
 		pingErr  error
 	)
 	if fromNode.IsRemote == 1 {
-		pingData, pingErr = h.tcpPingViaRemoteNode(fromNode, targetIP, targetPort, options)
+		pingData, pingErr = h.pingViaRemoteNode(fromNode, targetIP, targetPort, protocol, options)
 	} else {
-		pingData, pingErr = h.tcpPingViaNode(fromNodeID, targetIP, targetPort, options)
+		pingData, pingErr = h.pingViaNode(fromNodeID, targetIP, targetPort, protocol, options)
 	}
 	if pingErr != nil {
 		item["success"] = false
@@ -1266,21 +1283,21 @@ func (h *Handler) appendPathDiagnosis(results *[]map[string]interface{}, nodeCac
 	message := strings.TrimSpace(asString(pingData["message"]))
 	if success {
 		if message == "" {
-			message = "TCP连接成功"
+			message = "连接成功"
 		}
 	} else {
 		if message == "" {
 			message = strings.TrimSpace(asString(pingData["errorMessage"]))
 		}
 		if message == "" {
-			message = "TCP连接失败"
+			message = "连接失败"
 		}
 	}
 	item["message"] = message
 	*results = append(*results, item)
 }
 
-func (h *Handler) appendChainHopDiagnosis(results *[]map[string]interface{}, nodeCache map[int64]*nodeRecord, fromNodeID int64, toNode chainNodeRecord, description string, metadata map[string]interface{}, ipPreference string, options diagnosisExecOptions) {
+func (h *Handler) appendChainHopDiagnosis(results *[]map[string]interface{}, nodeCache map[int64]*nodeRecord, fromNodeID int64, toNode chainNodeRecord, description string, metadata map[string]interface{}, ipPreference string, protocol string, options diagnosisExecOptions) {
 	fromNode, _ := h.cachedNode(nodeCache, fromNodeID)
 	targetNode, err := h.cachedNode(nodeCache, toNode.NodeID)
 	if err != nil {
@@ -1292,7 +1309,7 @@ func (h *Handler) appendChainHopDiagnosis(results *[]map[string]interface{}, nod
 		h.appendFailedDiagnosis(results, nodeCache, fromNodeID, strings.Trim(strings.TrimSpace(targetNode.ServerIP), "[]"), toNode.Port, description, metadata, err.Error())
 		return
 	}
-	h.appendPathDiagnosis(results, nodeCache, fromNodeID, targetIP, targetPort, description, metadata, options)
+	h.appendPathDiagnosis(results, nodeCache, fromNodeID, targetIP, targetPort, description, metadata, protocol, options)
 }
 
 func resolveChainProbeTarget(fromNode, targetNode *nodeRecord, preferredPort int, ipPreference string, connectIp string) (string, int, error) {
@@ -1390,6 +1407,44 @@ func (h *Handler) tcpPingViaRemoteNode(node *nodeRecord, ip string, port int, op
 		Count:   4,
 		Timeout: options.pingTimeoutMS,
 	})
+}
+
+func isUDPBasedProtocol(protocol string) bool {
+	p := strings.ToLower(strings.TrimSpace(protocol))
+	return p == "kcp" || p == "udp" || p == "quic"
+}
+
+func (h *Handler) pingViaNode(nodeID int64, ip string, port int, protocol string, options diagnosisExecOptions) (map[string]interface{}, error) {
+	if isUDPBasedProtocol(protocol) {
+		return h.udpPingViaNode(nodeID, ip, port, options)
+	}
+	return h.tcpPingViaNode(nodeID, ip, port, options)
+}
+
+func (h *Handler) pingViaRemoteNode(node *nodeRecord, ip string, port int, protocol string, options diagnosisExecOptions) (map[string]interface{}, error) {
+	return h.tcpPingViaRemoteNode(node, ip, port, options)
+}
+
+func (h *Handler) udpPingViaNode(nodeID int64, ip string, port int, options diagnosisExecOptions) (map[string]interface{}, error) {
+	if options.commandTimeout <= 0 {
+		options.commandTimeout = diagnosisCommandTimeout
+	}
+	if options.pingTimeoutMS <= 0 {
+		options.pingTimeoutMS = int(diagnosisCommandTimeout / time.Millisecond)
+	}
+	res, err := h.sendNodeCommandWithTimeout(nodeID, "UdpPing", map[string]interface{}{
+		"ip":      ip,
+		"port":    port,
+		"count":   4,
+		"timeout": options.pingTimeoutMS,
+	}, options.commandTimeout, false, false)
+	if err != nil {
+		return nil, err
+	}
+	if res.Data == nil {
+		return nil, errors.New("节点未返回诊断数据")
+	}
+	return res.Data, nil
 }
 
 func splitRemoteTargets(remoteAddr string) []string {

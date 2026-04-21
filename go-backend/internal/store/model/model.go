@@ -546,6 +546,7 @@ type TunnelRecord struct {
 	Status       int
 	Flow         int64
 	TrafficRatio float64
+	Protocol     string
 }
 
 type UserQuotaView struct {

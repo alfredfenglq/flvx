@@ -845,6 +845,13 @@ func (w *WebSocketReporter) routeCommand(cmd CommandMessage) {
 		response.Data = tcpPingResult
 		// needSaveConfig = false (默认值)
 
+	// UDP Ping 诊断命令（只读，不需要保存配置）
+	case "UdpPing":
+		var udpPingResult TcpPingResponse
+		udpPingResult, err = w.handleUdpPing(cmd.Data)
+		response.Type = "UdpPingResponse"
+		response.Data = udpPingResult
+
 	// Service monitor check (read-only)
 	case "ServiceMonitorCheck":
 		var checkResult ServiceMonitorCheckResult
@@ -1673,6 +1680,64 @@ func (w *WebSocketReporter) handleTcpPing(data interface{}) (TcpPingResponse, er
 	return response, nil
 }
 
+func (w *WebSocketReporter) handleUdpPing(data interface{}) (TcpPingResponse, error) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return TcpPingResponse{}, fmt.Errorf("序列化UDP ping数据失败: %v", err)
+	}
+
+	var req TcpPingRequest
+	if err := json.Unmarshal(jsonData, &req); err != nil {
+		return TcpPingResponse{}, fmt.Errorf("解析UDP ping请求失败: %v", err)
+	}
+
+	if net.ParseIP(req.IP) == nil && !isValidHostname(req.IP) {
+		return TcpPingResponse{
+			IP:           req.IP,
+			Port:         req.Port,
+			Success:      false,
+			ErrorMessage: "无效的IP地址或主机名",
+			RequestId:    req.RequestId,
+		}, nil
+	}
+
+	if req.Port <= 0 || req.Port > 65535 {
+		return TcpPingResponse{
+			IP:           req.IP,
+			Port:         req.Port,
+			Success:      false,
+			ErrorMessage: "无效的端口号，范围应为1-65535",
+			RequestId:    req.RequestId,
+		}, nil
+	}
+
+	if req.Count <= 0 {
+		req.Count = 4
+	}
+	if req.Timeout <= 0 {
+		req.Timeout = 5000
+	}
+
+	avgTime, packetLoss, err := udpPingHost(req.IP, req.Port, req.Count, req.Timeout)
+
+	response := TcpPingResponse{
+		IP:        req.IP,
+		Port:      req.Port,
+		RequestId: req.RequestId,
+	}
+
+	if err != nil {
+		response.Success = false
+		response.ErrorMessage = err.Error()
+	} else {
+		response.Success = true
+		response.AverageTime = avgTime
+		response.PacketLoss = packetLoss
+	}
+
+	return response, nil
+}
+
 // handleServiceMonitorCheck executes a service monitor check on this node.
 // It always returns a result (command execution is considered successful even if the check fails).
 func (w *WebSocketReporter) handleServiceMonitorCheck(data interface{}) (ServiceMonitorCheckResult, error) {
@@ -1947,6 +2012,76 @@ func tcpPingHost(ip string, port int, count int, timeoutMs int) (float64, float6
 	packetLoss := float64(count-successCount) / float64(count) * 100
 
 	fmt.Printf("✅ TCP ping完成: 平均连接时间 %.2fms，失败率 %.1f%%\n", avgTime, packetLoss)
+
+	return avgTime, packetLoss, nil
+}
+
+func udpPingHost(ip string, port int, count int, timeoutMs int) (float64, float64, error) {
+	var totalTime float64
+	var successCount int
+
+	timeout := time.Duration(timeoutMs) * time.Millisecond
+	target := net.JoinHostPort(ip, fmt.Sprintf("%d", port))
+
+	fmt.Printf("🔍 开始UDP ping测试: %s，次数: %d，超时: %dms\n", target, count, timeoutMs)
+
+	if net.ParseIP(ip) == nil {
+		fmt.Printf("🔍 检测到域名，正在解析DNS...\n")
+		dnsStart := time.Now()
+
+		addrs, err := net.LookupHost(ip)
+		dnsDuration := time.Since(dnsStart)
+
+		if err != nil {
+			return 0, 100.0, fmt.Errorf("DNS解析失败: %v", err)
+		}
+		if len(addrs) == 0 {
+			return 0, 100.0, fmt.Errorf("DNS解析未返回任何IP地址")
+		}
+
+		fmt.Printf("✅ DNS解析完成 (%.2fms)，解析到 %d 个IP: %v\n",
+			dnsDuration.Seconds()*1000, len(addrs), addrs)
+
+		target = net.JoinHostPort(addrs[0], fmt.Sprintf("%d", port))
+		fmt.Printf("🎯 使用IP地址进行测试: %s\n", target)
+	} else {
+		fmt.Printf("🎯 使用IP地址进行测试: %s\n", target)
+	}
+
+	addr, err := net.ResolveUDPAddr("udp", target)
+	if err != nil {
+		return 0, 100.0, fmt.Errorf("解析UDP地址失败: %v", err)
+	}
+
+	for i := 0; i < count; i++ {
+		start := time.Now()
+
+		conn, err := net.DialTimeout("udp", addr.String(), timeout)
+
+		elapsed := time.Since(start)
+
+		if err != nil {
+			fmt.Printf("  第%d次UDP连接失败: %v (%.2fms)\n", i+1, err, elapsed.Seconds()*1000)
+		} else {
+			fmt.Printf("  第%d次UDP连接成功: %.2fms\n", i+1, elapsed.Seconds()*1000)
+			conn.Close()
+			totalTime += elapsed.Seconds() * 1000
+			successCount++
+		}
+
+		if i < count-1 {
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
+
+	if successCount == 0 {
+		return 0, 100.0, fmt.Errorf("所有UDP连接尝试都失败")
+	}
+
+	avgTime := totalTime / float64(successCount)
+	packetLoss := float64(count-successCount) / float64(count) * 100
+
+	fmt.Printf("✅ UDP ping完成: 平均连接时间 %.2fms，失败率 %.1f%%\n", avgTime, packetLoss)
 
 	return avgTime, packetLoss, nil
 }
