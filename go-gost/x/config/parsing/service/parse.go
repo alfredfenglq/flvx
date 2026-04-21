@@ -135,7 +135,7 @@ func ParseService(cfg *config.ServiceConfig) (service.Service, error) {
 		postDown = mdutil.GetStrings(md, parsing.MDKeyPostDown)
 		ignoreChain = mdutil.GetBool(md, parsing.MDKeyIgnoreChain)
 
-		if md.IsExists(parsing.MDKeyEnableStats) {
+		if md != nil && md.IsExists(parsing.MDKeyEnableStats) {
 			enableStats = mdutil.GetBool(md, parsing.MDKeyEnableStats)
 		}
 
@@ -157,7 +157,7 @@ func ParseService(cfg *config.ServiceConfig) (service.Service, error) {
 		resetTraffic := true
 		if cfg.Metadata != nil {
 			md := metadata.NewMetadata(cfg.Metadata)
-			if md.IsExists(parsing.MDKeyObserverResetTraffic) {
+			if md != nil && md.IsExists(parsing.MDKeyObserverResetTraffic) {
 				resetTraffic = mdutil.GetBool(md, parsing.MDKeyObserverResetTraffic)
 			}
 		}
