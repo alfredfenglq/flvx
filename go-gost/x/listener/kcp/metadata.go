@@ -76,6 +76,9 @@ func (l *kcpListener) parseMetadata(md mdata.Metadata) (err error) {
 		if md.IsExists("kcp.sndwnd") {
 			l.md.config.SndWnd = mdutil.GetInt(md, "kcp.sndwnd")
 		}
+		if md.IsExists("kcp.sockbuf") {
+			l.md.config.SockBuf = mdutil.GetInt(md, "kcp.sockbuf")
+		}
 		if md.IsExists("kcp.smuxver") {
 			l.md.config.SmuxVer = mdutil.GetInt(md, "kcp.smuxver")
 		}

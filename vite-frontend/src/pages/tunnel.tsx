@@ -2184,27 +2184,25 @@ export default function TunnelPage() {
                   <h3 className="text-lg font-semibold">入口配置</h3>
 
                   <div className="space-y-2">
-                      <Select
-                        disabledKeys={[
-                          ...nodes
-                            .filter(
-                              (node) =>
-                                node.status !== 1 &&
-                                !(
-                                  isEdit &&
-                                  form.inNodeId.some(
-                                    (ct) => ct.nodeId === node.id,
-                                  )
-                                ),
-                            )
-                            .map((node) => node.id.toString()),
-                          ...(form.outNodeId || []).map((ct) =>
-                            ct.nodeId.toString(),
-                          ),
-                          ...getSelectedChainNodeIds().map((id) =>
-                            id.toString(),
-                          ),
-                        ]}
+                    <Select
+                      disabledKeys={[
+                        ...nodes
+                          .filter(
+                            (node) =>
+                              node.status !== 1 &&
+                              !(
+                                isEdit &&
+                                form.inNodeId.some(
+                                  (ct) => ct.nodeId === node.id,
+                                )
+                              ),
+                          )
+                          .map((node) => node.id.toString()),
+                        ...(form.outNodeId || []).map((ct) =>
+                          ct.nodeId.toString(),
+                        ),
+                        ...getSelectedChainNodeIds().map((id) => id.toString()),
+                      ]}
                       errorMessage={errors.inNodeId}
                       isInvalid={!!errors.inNodeId}
                       label="入口节点"
@@ -3766,7 +3764,7 @@ export default function TunnelPage() {
                   </div>
                 )}
               </ModalBody>
-              <ModalFooter className="bg-transparent border-t border-divider">
+              <ModalFooter className="border-t border-divider">
                 <Button variant="light" onPress={onClose}>
                   关闭
                 </Button>
@@ -3992,4 +3990,6 @@ export default function TunnelPage() {
       />
     </AnimatedPage>
   );
+}
+
 }
