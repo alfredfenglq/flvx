@@ -825,7 +825,9 @@ func (h *Handler) tunnelUpdate(w http.ResponseWriter, r *http.Request) {
 	defer func() { tx.Rollback() }()
 
 	updateProtocol := "tls"
-	if len(runtimeState.InNodes) > 0 && strings.TrimSpace(runtimeState.InNodes[0].Protocol) != "" {
+	if len(runtimeState.OutNodes) > 0 && strings.TrimSpace(runtimeState.OutNodes[0].Protocol) != "" {
+		updateProtocol = strings.TrimSpace(runtimeState.OutNodes[0].Protocol)
+	} else if len(runtimeState.InNodes) > 0 && strings.TrimSpace(runtimeState.InNodes[0].Protocol) != "" {
 		updateProtocol = strings.TrimSpace(runtimeState.InNodes[0].Protocol)
 	}
 	if err := h.repo.UpdateTunnelTx(
@@ -3405,14 +3407,22 @@ func (h *Handler) rollbackTunnelRuntime(chainNodeIDs, serviceNodeIDs []int64, tu
 		protocol = "tls"
 	}
 	seenServices := make(map[int64]struct{})
-	serviceName := fmt.Sprintf("%d_%s", tunnelID, protocol)
+	serviceNames := []string{
+		fmt.Sprintf("%d_tls", tunnelID),
+		fmt.Sprintf("%d_kcp", tunnelID),
+		fmt.Sprintf("%d_wss", tunnelID),
+		fmt.Sprintf("%d_mtls", tunnelID),
+		fmt.Sprintf("%d_mwss", tunnelID),
+		fmt.Sprintf("%d_tcp", tunnelID),
+		fmt.Sprintf("%d_mtcp", tunnelID),
+	}
 	for i := len(serviceNodeIDs) - 1; i >= 0; i-- {
 		nodeID := serviceNodeIDs[i]
 		if _, ok := seenServices[nodeID]; ok {
 			continue
 		}
 		seenServices[nodeID] = struct{}{}
-		_, _ = h.sendNodeCommand(nodeID, "DeleteService", map[string]interface{}{"services": []string{serviceName}}, false, true)
+		_, _ = h.sendNodeCommand(nodeID, "DeleteService", map[string]interface{}{"services": serviceNames}, false, true)
 	}
 
 	seenChains := make(map[int64]struct{})

@@ -105,6 +105,8 @@ func GetDuration(md metadata.Metadata, keys ...string) (v time.Duration) {
 		switch vv := md.Get(key).(type) {
 		case int:
 			v = time.Duration(vv) * time.Second
+		case float64:
+			v = time.Duration(vv) * time.Second
 		case string:
 			v, _ = time.ParseDuration(vv)
 			if v == 0 {
