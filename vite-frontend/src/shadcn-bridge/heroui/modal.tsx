@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   Dialog,
   DialogContent as BaseDialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -159,6 +160,7 @@ export function ModalContent({
       showCloseButton={false}
       {...props}
     >
+      <DialogTitle className="sr-only">Modal Dialog</DialogTitle>
       {renderedChildren}
     </BaseDialogContent>
   );
